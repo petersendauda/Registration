@@ -1,13 +1,18 @@
 <?php
+session_start();
+
 include("dbconn.php");
+include("function.php");
 
-$query = "SELECT * FROM `register` ";
+$data = check_login($conn);
+
+$query = "SELECT * FROM register";
 $result = mysqli_query($conn, $query);
-$datarow = mysqli_num_rows($result);
 
-  if ($datarow > 0) {
-    $row = mysqli_fetch_array($result);
-        header("location: index.php");
+
+if ($result) {
+   $row = mysqli_fetch_array($result);
+
 }
 ?>
 
@@ -30,7 +35,9 @@ $datarow = mysqli_num_rows($result);
    <div class="bg-success p-2 text-white">
       <img src="nec_logo_final.jpg" alt="">
       <h1 align="center"> NATIONAL ELECTORIAL COMMISSION <h1>
+         <!-- logout -->
             <h3 align="center">(NEC)</h3>
+            <a href="logout.php" class="btn btn-primary text-bg-light">Logout</a>
    </div>
    <div class="bg-success p-2 text-white" style="--bs-bg-opacity: .5;">
       <div class="mx-auto p-2" style="width: 200px;">
@@ -48,6 +55,93 @@ $datarow = mysqli_num_rows($result);
       include("addvoter.php");
       ?>
       <br><br><br>
+
+         <!-- DASHBOARD -->
+         <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <!-- Number of Female -->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Number of Male</h3>
+                    </div>
+                    <div class="pa nel-body">
+                        <?php
+                        $sql = "SELECT COUNT(*) AS num_males FROM register WHERE gender='male'";
+                        $results = mysqli_query($conn, $sql);
+
+                        if ($results) {
+                            // Output data of the first row
+                            $row = mysqli_fetch_array($results);
+                            $num_males = $row["num_males"];
+                        } else {
+                            $num_males = 0;
+                        }
+                        ?>
+                        <h1 class="text-dark">
+                            <?php echo $num_males; ?>
+                        </h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <!-- Number of Male -->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Number of Female</h3>
+                    </div>
+                    <div class="panel-body">
+                        <?php
+                        $sql = "SELECT COUNT(*) AS num_females FROM register WHERE gender='female'";
+                        $results = mysqli_query($conn, $sql);
+
+                        if ($results) {
+                            // Output data of the first row
+                            $row = mysqli_fetch_array($results);
+                            $num_females = $row["num_females"];
+                        } else {
+                            $num_females = 0;
+                        }
+
+
+
+                        ?>
+                        <h1 class="text-dark">
+                            <?php echo $num_females; ?>
+                        </h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <!-- No of ID -->
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">No of ID</h3>
+                    </div>
+                    <div class="panel-body">
+                    <?php
+                        $sql = "SELECT COUNT(*) AS id FROM register";
+                        $results = mysqli_query($conn, $sql);
+
+                        if ($results) {
+                            // Output data of the first row
+                            $row = mysqli_fetch_array($results);
+                            $id = $row["id"];
+                        } else {
+                            $id = 0;
+                        }
+                        ?>
+                        <h1 class="text-dark">
+                            <?php echo $id; ?>
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
       <!-- list -->
       <h1 align="center">REGISTERED VOTERS</h1>
       <table class="table">
@@ -96,7 +190,7 @@ $datarow = mysqli_num_rows($result);
                      <?php echo $row['phone']; ?>
                   </td>
                   <td>
-                  <?php echo $row['gender']; ?>
+                     <?php echo $row['gender']; ?>
                   </td>
                   <td>
                      <?php echo $row['age']; ?>
@@ -116,6 +210,7 @@ $datarow = mysqli_num_rows($result);
             ?>
          </tbody>
       </table>
+
 
       <!-- footer -->
       <footer class="footer-dark">

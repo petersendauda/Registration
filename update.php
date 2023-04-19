@@ -104,8 +104,8 @@ if (!$row) {
           </div>
           <div class="mb-3">
             <label for="gender" class="col-form-label">Gender:</label><br>
-            MALE<input type="radio" name="gender" required>
-            FEMALE<input type="radio" name="gender" required>
+            MALE<input type="radio" name="gender" value= "male" <?php echo ($row['gender']=='male')? "checked":""; ?> required>
+            FEMALE<input type="radio" name="gender"value= "female" <?php echo ($row['gender']=='female')? "checked":""; ?>  required>
           </div>
           <div class="mb-3">
             <label for="age"  class="col-form-label">Age:</label>
