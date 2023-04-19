@@ -16,6 +16,12 @@ if (isset($_POST['submit'])) {
 
     $sql= "INSERT INTO register(id, fname, lname, nin, vid, email, phone, gender, age, address) 
     VALUES (Null,'$fname','$lname','$nin','$vid','$email','$phone','$gender','$age','$address')";
+    $result = mysqli_query($conn, $sql);
+    
+      if ($result) {
+
+            header("Location: index.php");
+    }
 }
 
 ?>
