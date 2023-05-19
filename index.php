@@ -6,13 +6,18 @@ include("function.php");
 
 $data = check_login($conn);
 
-$query = "SELECT * FROM register";
-$result = mysqli_query($conn, $query);
-
 
 if ($result) {
    $row = mysqli_fetch_array($result);
 
+}
+
+$gender = array();
+$sql = "SELECT gender, COUNT(*) as amount FROM register 
+GROUP BY gender";
+$result = mysqli_query($conn, $sql);
+while ($row = mysqli_fetch_assoc($result)) {
+   $gender[] = array("x" => $row["gender"], "y" => $row["amount"]);
 }
 ?>
 
@@ -29,13 +34,39 @@ if ($result) {
    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
       integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
    <link rel="stylesheet" href="footer.css" class="">
+
+   <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+   <!-- PIE CHART -->
+   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+   <script type="text/javascript">
+      google.charts.load('current', { 'packages': ['corechart'] });
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+
+         var chartData = <?php echo json_encode($gender); ?>;
+         var data = google.visualization.arrayToDataTable([chartData]);
+
+         var options = {
+            title: 'Gender',
+            backgroundColor: 'transparent'
+         };
+
+         var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+         chart.draw(data, options);
+      }
+   </script>
+   <!-- PIE CHART -->
+
 </head>
 
 <body>
    <div class="bg-success p-2 text-white">
       <img src="nec_logo_final.jpg" alt="">
       <h1 align="center"> NATIONAL ELECTORIAL COMMISSION <h1>
-         <!-- logout -->
+            <!-- logout -->
             <h3 align="center">(NEC)</h3>
             <a href="logout.php" class="btn btn-primary text-bg-light">Logout</a>
    </div>
@@ -56,96 +87,75 @@ if ($result) {
       ?>
       <br><br><br>
 
-         <!-- DASHBOARD -->
-         <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-3">
-                <!-- Number of Female -->
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Number of Male</h3>
-                    </div>
-                    <div class="pa nel-body">
-                        <?php
-                        $sql = "SELECT COUNT(*) AS num_males FROM register WHERE gender='male'";
-                        $results = mysqli_query($conn, $sql);
 
-                        if ($results) {
-                            // Output data of the first row
-                            $row = mysqli_fetch_array($results);
-                            $num_males = $row["num_males"];
-                        } else {
-                            $num_males = 0;
-                        }
-                        ?>
-                        <h1 class="text-dark">
-                            <?php echo $num_males; ?>
-                        </h1>
-                    </div>
-                </div>
+
+
+
+      <div id="piechart" style="width: 900px; height: 500px;"></div>
+
+      <!-- DASHBOARD 1-->
+      <div class=" col-xxl-12 col-sm-18">
+         <div class="card gradient-bx text-white bg-primary rounded">
+            <div class="card-body">
+               <div class="media align-items-center">
+                  <div class="media-body">
+                     <p class="mb-1">No. Of Registered Voters</p>
+                     <?php
+
+                     $info = mysqli_query($conn, "SELECT * FROM register ");
+                     $row = mysqli_num_rows($info); ?>
+                     <div class="d-flex flex-wrap">
+                        <h2 class="fs-40 font-w600 text-white mb-0 mr-3">
+                           <?php echo $row ?>
+                        </h2>
+                     </div>
+                  </div>
+               </div>
             </div>
-            <div class="col-md-3">
-                <!-- Number of Male -->
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Number of Female</h3>
-                    </div>
-                    <div class="panel-body">
-                        <?php
-                        $sql = "SELECT COUNT(*) AS num_females FROM register WHERE gender='female'";
-                        $results = mysqli_query($conn, $sql);
-
-                        if ($results) {
-                            // Output data of the first row
-                            $row = mysqli_fetch_array($results);
-                            $num_females = $row["num_females"];
-                        } else {
-                            $num_females = 0;
-                        }
+         </div>
+      </div>
+      <!-- DASHBOARD 1-->
 
 
 
-                        ?>
-                        <h1 class="text-dark">
-                            <?php echo $num_females; ?>
-                        </h1>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <!-- No of ID -->
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">No of ID</h3>
-                    </div>
-                    <div class="panel-body">
-                    <?php
-                        $sql = "SELECT COUNT(*) AS id FROM register";
-                        $results = mysqli_query($conn, $sql);
+      <!-- apexchart -->
+      <style>
+         #chart {
+            max-width: 500px;
+            margin: 30px auto;
+         }
+      </style>
+      <div id="chart"></div>
+      <script>
 
-                        if ($results) {
-                            // Output data of the first row
-                            $row = mysqli_fetch_array($results);
-                            $id = $row["id"];
-                        } else {
-                            $id = 0;
-                        }
-                        ?>
-                        <h1 class="text-dark">
-                            <?php echo $id; ?>
-                        </h1>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+         var options = {
+            chart: {
+               type: 'bar'
+            },
+            series: [{
+               name: 'Customers',
+               data: <?php echo json_encode($gender); ?>
+            }],
+            xaxis: {
+               categories: ['FEMALE', 'MALE']
+            },
+         };
 
+
+         var chart = new ApexCharts(document.querySelector("#chart"), options);
+
+         chart.render();
+      </script>
 
 
       <!-- list -->
       <h1 align="center">REGISTERED VOTERS</h1>
       <table class="table">
          <thead>
+            <?php
+            $query = "SELECT * FROM register order by id desc";
+            $result = mysqli_query($conn, $query);
+            ?>
             <tr>
                <th scope="col">id</th>
                <th scope="col">First</th>

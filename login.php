@@ -70,7 +70,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <button type="submit" class="btn btn-primary">Login</button>
   </form>
 
-
+  <p>DO NOT HAVE AN ACCOUNT? YOU CAN 
+    <a href="signup.php">SIGNUP TO NEC PORTAL</a>
+</P>
 
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"

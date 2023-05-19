@@ -38,7 +38,7 @@ $sql = "INSERT INTO `staff_login`(`id`, `email`, `password`) VALUES (Null, '$ema
 $result = mysqli_query($conn, $sql);
 
 if ($result) {
-    echo $sql? header("Location: signup_alert.php"): "<Script>alert('Successful')</Script>" ;
+    echo $sql? header("Location: login.php"): "<Script>alert('Successful')</Script>" ;
     exit;
 }
 
